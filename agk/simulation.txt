@@ -1,0 +1,562 @@
+
+remstart
+* simulationDeck$ is a one dimensional array that stores the card names.
+
+* CreateSimulationDeck() is where the deck is first created. This is based off of the lock settings chosen.
+
+* Each time the simulation is run the deck is created again and can be different each time, so for example
+	if you want 10-30 reds the first simulation might have 15 reds, the second might have 24, and the third
+	might have 12 etc. When a range is given like 10-30 it's never the same number each simulation run.
+
+* The CreateSimulationDeck() also has a bit of code at the top which sets the numbers for some options if you 
+	chose let bot decide.
+	
+* The language I used doesn't have a function to shuffle arrays so I have to swap each index randomly with another.
+	This is what ShuffleSimulationDeck() is doing.
+
+* At the very bottom of this code I've attached the code that sits in the main app loop and triggered when needed.
+remend
+
+global simulationAverageMinutesLocked as integer
+global simulationAverageNoOfTurns as integer
+global simulationAverageNoOfCardsDrawn as integer
+global simulationBestCaseMinutesLocked as integer
+global simulationBestCaseNoOfTurns as integer
+global simulationBestCaseNoOfCardsDrawn as integer
+global simulationCount as integer
+global simulationDeck$ as string[]
+global simulationInitialDoubleUps as integer
+global simulationInitialFreezes as integer
+global simulationInitialGreens as integer
+global simulationInitialReds as integer
+global simulationInitialResets as integer
+global simulationInitialYellowsAdd1 as integer
+global simulationInitialYellowsAdd2 as integer
+global simulationInitialYellowsAdd3 as integer
+global simulationInitialYellowsMinus1 as integer
+global simulationInitialYellowsMinus2 as integer
+global simulationMinimumRedCards as integer	
+global simulationMinutesLocked as integer
+global simulationNoOfCardsDrawn as integer
+global simulationNoOfDoubleUps as integer
+global simulationNoOfFreezes as integer
+global simulationNoOfGreens as integer
+global simulationNoOfReds as integer
+global simulationNoOfResets as integer
+global simulationNoOfTurns as integer
+global simulationNoOfYellows as integer
+global simulationNoOfYellowsAdd1 as integer
+global simulationNoOfYellowsAdd2 as integer
+global simulationNoOfYellowsAdd3 as integer
+global simulationNoOfYellowsMinus1 as integer
+global simulationNoOfYellowsMinus2 as integer
+global simulationsToTry as integer : simulationsToTry = 100
+global simulationWorstCaseMinutesLocked as integer
+global simulationWorstCaseNoOfTurns as integer
+global simulationWorstCaseNoOfCardsDrawn as integer
+
+function AddCardToSimulationDeck(cardName$ as string)
+	if (cardName$ = "DoubleUp")
+		simulationDeck$.insert("DoubleUp")
+		inc simulationNoOfDoubleUps
+	elseif (cardName$ = "Freeze")
+		simulationDeck$.insert("Freeze")
+		inc simulationNoOfFreezes
+	elseif (cardName$ = "Green")
+		simulationDeck$.insert("Green")
+		inc simulationNoOfGreens
+	elseif (cardName$ = "Red")
+		simulationDeck$.insert("Red")
+		inc simulationNoOfReds
+	elseif (cardName$ = "Reset")
+		simulationDeck$.insert("Reset")
+		inc simulationNoOfResets
+	elseif (cardName$ = "YellowAdd1")
+		simulationDeck$.insert("YellowAdd1")
+		inc simulationNoOfYellows
+		inc simulationNoOfYellowsAdd1
+	elseif (cardName$ = "YellowAdd2")
+		simulationDeck$.insert("YellowAdd2")
+		inc simulationNoOfYellows
+		inc simulationNoOfYellowsAdd2
+	elseif (cardName$ = "YellowAdd3")
+		simulationDeck$.insert("YellowAdd3")
+		inc simulationNoOfYellows
+		inc simulationNoOfYellowsAdd3
+	elseif (cardName$ = "YellowMinus1")
+		simulationDeck$.insert("YellowMinus1")
+		inc simulationNoOfYellows
+		inc simulationNoOfYellowsMinus1
+	elseif (cardName$ = "YellowMinus2")
+		simulationDeck$.insert("YellowMinus2")
+		inc simulationNoOfYellows
+		inc simulationNoOfYellowsMinus2
+	endif
+endfunction
+
+function CreateSimulationDeck()
+	simulationDeck$.length = -1
+	simulationNoOfDoubleUps = 0
+	simulationNoOfFreezes = 0
+	simulationNoOfGreens = 0
+	simulationNoOfReds = 0
+	simulationNoOfResets = 0
+	simulationNoOfYellows = 0
+	simulationNoOfYellowsAdd1 = 0
+	simulationNoOfYellowsAdd2 = 0
+	simulationNoOfYellowsAdd3 = 0
+	simulationNoOfYellowsMinus1 = 0
+	simulationNoOfYellowsMinus2 = 0
+
+	if (botChosen = 1 or botChosen = 2)
+		if (fixed = 0)
+			if (yellowCards = 3)
+				if (random(1, 100) <= 70)
+					maxYellowsRandom = random(0, floor(maxReds / 2.0))
+					minYellowsRandom = random(0, maxYellowsRandom)
+				else
+					maxYellowsRandom = 0
+					minYellowsRandom = 0
+				endif
+			endif
+			if (freezeCards = 3)
+				if (random(1, 100) <= 20)
+					maxFreezes = random(0, 3)
+					minFreezes = random(0, maxFreezes)
+				else
+					maxFreezes = 0
+					minFreezes = 0
+				endif
+			endif
+			if (doubleUpCards = 3)
+				if (random(1, 100) <= 15)
+					maxDoubleUps = random(1, 2)
+					minDoubleUps = random(1, maxDoubleUps)
+				else
+					maxDoubleUps = 0
+					minDoubleUps = 0
+				endif
+			endif
+			if (resetCards = 3)
+				if (random(1, 100) <= 15)
+					maxResets = random(1, 2)
+					minResets = random(1, maxResets)
+				else
+					maxResets = 0
+					minResets = 0
+				endif
+			endif
+			if (multipleGreensRequired = 3)
+				if (random(1, 100) <= 15)
+					multipleGreensRequired = 1
+					maxGreens = random(2, 4)
+					minGreens = random(2, maxGreens)
+				else
+					multipleGreensRequired = 0
+					maxGreens = 1
+					minGreens = 1
+				endif
+			endif
+		endif
+	endif
+	if (botChosen = 3 or botChosen = 4)
+		if (fixed = 0)
+			if (yellowCards = 3)
+				if (random(1, 100) <= 50)
+					maxYellowsRandom = random(0, floor(maxReds / 1.5))
+					minYellowsRandom = random(0, maxYellowsRandom)
+				else
+					maxYellowsRandom = 0
+					minYellowsRandom = 0
+				endif
+			endif
+			if (freezeCards = 3)
+				if (random(1, 100) <= 35)
+					maxFreezes = random(1, 5)
+					minFreezes = random(1, maxFreezes)
+				else
+					maxFreezes = 0
+					minFreezes = 0
+				endif
+			endif
+			if (doubleUpCards = 3)
+				if (random(1, 100) <= 30)
+					maxDoubleUps = random(1, 4)
+					minDoubleUps = random(1, maxDoubleUps)
+				else
+					maxDoubleUps = 0
+					minDoubleUps = 0
+				endif
+			endif
+			if (resetCards = 3)
+				if (random(1, 100) <= 30)
+					maxResets = random(1, 4)
+					minResets = random(1, maxResets)
+				else
+					maxResets = 0
+					minResets = 0
+				endif
+			endif
+			if (multipleGreensRequired = 3)
+				if (random(1, 100) <= 30)
+					multipleGreensRequired = 1
+					maxGreens = random(2, 8)
+					minGreens = random(2, maxGreens)
+				else
+					multipleGreensRequired = 0
+					maxGreens = 1
+					minGreens = 1
+				endif
+			endif
+		endif
+	endif
+
+	for i = 1 to random(minDoubleUps, maxDoubleUps)
+		AddCardToSimulationDeck("DoubleUp")
+	next
+	for i = 1 to random(minFreezes, maxFreezes)
+		AddCardToSimulationDeck("Freeze")
+	next
+	for i = 1 to random(minGreens, maxGreens)
+		AddCardToSimulationDeck("Green")
+	next
+	for i = 1 to random(minReds, maxReds)
+		AddCardToSimulationDeck("Red")
+	next
+	for i = 1 to random(minResets, maxResets)
+		AddCardToSimulationDeck("Reset")
+	next
+	for i = 1 to random(minYellowsRandom, maxYellowsRandom)
+		randomYellow = random(1, 5)
+		if (randomYellow = 1) then AddCardToSimulationDeck("YellowAdd1")
+		if (randomYellow = 2) then AddCardToSimulationDeck("YellowAdd2")
+		if (randomYellow = 3) then AddCardToSimulationDeck("YellowAdd3")
+		if (randomYellow = 4) then AddCardToSimulationDeck("YellowMinus1")
+		if (randomYellow = 5) then AddCardToSimulationDeck("YellowMinus2")
+	next
+	for i = 1 to random(minYellowsAdd, maxYellowsAdd)
+		randomYellow = random(1, 3)
+		if (randomYellow = 1) then AddCardToSimulationDeck("YellowAdd1")
+		if (randomYellow = 2) then AddCardToSimulationDeck("YellowAdd2")
+		if (randomYellow = 3) then AddCardToSimulationDeck("YellowAdd3")
+	next
+	for i = 1 to random(minYellowsMinus, maxYellowsMinus)
+		randomYellow = random(1, 2)
+		if (randomYellow = 1) then AddCardToSimulationDeck("YellowMinus1")
+		if (randomYellow = 2) then AddCardToSimulationDeck("YellowMinus2")
+	next
+	for i = 1 to random(minYellowsMinus2, maxYellowsMinus2)
+		AddCardToSimulationDeck("YellowMinus2")
+	next
+	for i = 1 to random(minYellowsMinus1, maxYellowsMinus1)
+		AddCardToSimulationDeck("YellowMinus1")
+	next
+	for i = 1 to random(minYellowsAdd1, maxYellowsAdd1)
+		AddCardToSimulationDeck("YellowAdd1")
+	next
+	for i = 1 to random(minYellowsAdd2, maxYellowsAdd2)
+		AddCardToSimulationDeck("YellowAdd2")
+	next
+	for i = 1 to random(minYellowsAdd3, maxYellowsAdd3)
+		AddCardToSimulationDeck("YellowAdd3")
+	next
+
+	simulationInitialDoubleUps = simulationNoOfDoubleUps
+	simulationInitialFreezes = simulationNoOfFreezes
+	simulationInitialGreens = simulationNoOfGreens
+	simulationInitialReds = simulationNoOfReds
+	simulationInitialResets = simulationNoOfResets
+	simulationInitialYellowsAdd1 = simulationNoOfYellowsAdd1
+	simulationInitialYellowsAdd2 = simulationNoOfYellowsAdd2
+	simulationInitialYellowsAdd3 = simulationNoOfYellowsAdd3
+	simulationInitialYellowsMinus1 = simulationNoOfYellowsMinus1
+	simulationInitialYellowsMinus2 = simulationNoOfYellowsMinus2
+
+	if (maxReds = 0)
+		simulationMinimumRedCards = 1
+	elseif (minReds <> maxReds)
+		simulationMinimumRedCards = minReds
+	else
+		simulationMinimumRedCards = 1
+	endif
+endfunction
+
+function RemoveCardFromSimulationDeck(index)
+	if (index > -1)
+		if (simulationDeck$[index] = "DoubleUp")
+			dec simulationNoOfDoubleUps
+		elseif (simulationDeck$[index] = "Freeze")
+			dec simulationNoOfFreezes
+		elseif (simulationDeck$[index] = "Green")
+			dec simulationNoOfGreens
+		elseif (simulationDeck$[index] = "Red")
+			dec simulationNoOfReds
+		elseif (simulationDeck$[index] = "Reset")
+			dec simulationNoOfResets
+		elseif (simulationDeck$[index] = "YellowAdd1")
+			dec simulationNoOfYellows
+			dec simulationNoOfYellowsAdd1
+		elseif (simulationDeck$[index] = "YellowAdd2")
+			dec simulationNoOfYellows
+			dec simulationNoOfYellowsAdd2
+		elseif (simulationDeck$[index] = "YellowAdd3")
+			dec simulationNoOfYellows
+			dec simulationNoOfYellowsAdd3
+		elseif (simulationDeck$[index] = "YellowMinus1")
+			dec simulationNoOfYellows
+			dec simulationNoOfYellowsMinus1
+		elseif (simulationDeck$[index] = "YellowMinus2")
+			dec simulationNoOfYellows
+			dec simulationNoOfYellowsMinus2
+		endif
+		simulationDeck$.remove(index)
+	endif
+endfunction
+
+function RunSimulation()
+	if (simulationCount < simulationsToTry)
+		inc simulationCount
+		simulationMinutesLocked = 0
+		simulationNoOfTurns = 0
+		simulationNoOfCardsDrawn = 0
+		if (simulationCount = 1)
+			simulationAverageMinutesLocked = 0
+			simulationAverageNoOfTurns = 0
+			simulationAverageNoOfCardsDrawn = 0
+			simulationBestCaseMinutesLocked = 9999999999
+			simulationBestCaseNoOfTurns = 9999999999
+			simulationBestCaseNoOfCardsDrawn = 9999999999
+			simulationWorstCaseMinutesLocked = 0
+			simulationWorstCaseNoOfTurns = 0
+			simulationWorstCaseNoOfCardsDrawn = 0
+		endif
+		CreateSimulationDeck()
+		ShuffleSimulationDeck()
+		while (simulationDeck$.length >= 0)
+			picked = random(0, simulationDeck$.length)
+			if (simulationDeck$[picked] = "Green" and simulationNoOfTurns < simulationMinimumRedCards and (simulationNoOfDoubleUps > 0 or simulationNoOfFreezes > 0 or simulationNoOfReds > 0 or simulationNoOfResets > 0 or simulationNoOfYellows > 0))
+				continue
+			endif
+			if (simulationDeck$[picked] = "DoubleUp")
+				RemoveCardFromSimulationDeck(picked)
+				originalNoOfReds = simulationNoOfReds
+				for i = 1 to originalNoOfReds
+					if (simulationNoOfReds < 399) then AddCardToSimulationDeck("Red")
+				next
+				originalNoOfYellowsAdd1 = simulationNoOfYellowsAdd1
+				for i = 1 to originalNoOfYellowsAdd1
+					if (simulationNoOfYellowsAdd1 < 199) then AddCardToSimulationDeck("YellowAdd1")
+				next
+				originalNoOfYellowsAdd2 = simulationNoOfYellowsAdd2
+				for i = 1 to originalNoOfYellowsAdd2
+					if (simulationNoOfYellowsAdd2 < 199) then AddCardToSimulationDeck("YellowAdd2")
+				next
+				originalNoOfYellowsAdd3 = simulationNoOfYellowsAdd3
+				for i = 1 to originalNoOfYellowsAdd3
+					if (simulationNoOfYellowsAdd3 < 199) then AddCardToSimulationDeck("YellowAdd3")
+				next
+				originalNoOfYellowsMinus1 = simulationNoOfYellowsMinus1
+				for i = 1 to simulationNoOfYellowsMinus1
+					if (simulationNoOfYellowsMinus1 < 199) then AddCardToSimulationDeck("YellowMinus1")
+				next
+				originalNoOfYellowsMinus2 = simulationNoOfYellowsMinus2
+				for i = 1 to simulationNoOfYellowsMinus2
+					if (simulationNoOfYellowsMinus2 < 199) then AddCardToSimulationDeck("YellowMinus2")
+				next
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "Freeze")
+				RemoveCardFromSimulationDeck(picked)
+				simulationAverageMinutesLocked = simulationAverageMinutesLocked + random((60 * regularity#) * 2, (60 * regularity#) * 4)
+				simulationMinutesLocked = simulationMinutesLocked + random((60 * regularity#) * 2, (60 * regularity#) * 4)
+				inc simulationAverageNoOfTurns
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfTurns
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "Green")
+				RemoveCardFromSimulationDeck(picked)
+				if (multipleGreensRequired = 0)
+					simulationDeck$.length = -1
+					exit
+				endif
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "Red")
+				RemoveCardFromSimulationDeck(picked)
+				simulationAverageMinutesLocked = simulationAverageMinutesLocked + (60 * regularity#)
+				simulationMinutesLocked = simulationMinutesLocked + (60 * regularity#)
+				inc simulationAverageNoOfTurns
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfTurns
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "Reset")
+				RemoveCardFromSimulationDeck(picked)
+				originalNoOfFreezes = simulationNoOfFreezes
+				if (originalNoOfFreezes > simulationInitialFreezes)
+					for i = originalNoOfFreezes to simulationInitialFreezes + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("Freeze"))
+					next
+				elseif (originalNoOfFreezes < simulationInitialFreezes)
+					for i = originalNoOfFreezes + 1 to simulationInitialFreezes
+						AddCardToSimulationDeck("Freeze")
+					next
+				endif
+				originalNoOfGreens = simulationNoOfGreens
+				if (originalNoOfGreens > simulationInitialGreens)
+					for i = originalNoOfGreens to simulationInitialGreens + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("Green"))
+					next
+				elseif (originalNoOfGreens < simulationInitialGreens)
+					for i = originalNoOfGreens + 1 to simulationInitialGreens
+						AddCardToSimulationDeck("Green")
+					next
+				endif
+				originalNoOfReds = simulationNoOfReds
+				if (originalNoOfReds > simulationInitialReds)
+					for i = originalNoOfReds to simulationInitialReds + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("Red"))
+					next
+				elseif (originalNoOfReds < simulationInitialReds)
+					for i = originalNoOfReds + 1 to simulationInitialReds
+						AddCardToSimulationDeck("Red")
+					next
+				endif
+				originalNoOfYellowsAdd1 = simulationNoOfYellowsAdd1
+				if (originalNoOfYellowsAdd1 > simulationInitialYellowsAdd1)
+					for i = originalNoOfYellowsAdd1 to simulationInitialYellowsAdd1 + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("YellowAdd1"))
+					next
+				elseif (originalNoOfYellowsAdd1 < simulationInitialYellowsAdd1)
+					for i = originalNoOfYellowsAdd1 + 1 to simulationInitialYellowsAdd1
+						AddCardToSimulationDeck("YellowAdd1")
+					next
+				endif
+				originalNoOfYellowsAdd2 = simulationNoOfYellowsAdd2
+				if (originalNoOfYellowsAdd2 > simulationInitialYellowsAdd2)
+					for i = originalNoOfYellowsAdd2 to simulationInitialYellowsAdd2 + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("YellowAdd2"))
+					next
+				elseif (originalNoOfYellowsAdd2 < simulationInitialYellowsAdd2)
+					for i = originalNoOfYellowsAdd2 + 1 to simulationInitialYellowsAdd2
+						AddCardToSimulationDeck("YellowAdd2")
+					next
+				endif
+				originalNoOfYellowsAdd3 = simulationNoOfYellowsAdd3
+				if (originalNoOfYellowsAdd3 > simulationInitialYellowsAdd3)
+					for i = originalNoOfYellowsAdd3 to simulationInitialYellowsAdd3 + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("YellowAdd3"))
+					next
+				elseif (originalNoOfYellowsAdd3 < simulationInitialYellowsAdd3)
+					for i = originalNoOfYellowsAdd3 + 1 to simulationInitialYellowsAdd3
+						AddCardToSimulationDeck("YellowAdd3")
+					next
+				endif
+				originalNoOfYellowsMinus1 = simulationNoOfYellowsMinus1
+				if (originalNoOfYellowsMinus1 > simulationInitialYellowsMinus1)
+					for i = originalNoOfYellowsMinus1 to simulationInitialYellowsMinus1 + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("YellowMinus1"))
+					next
+				elseif (originalNoOfYellowsMinus1 < simulationInitialYellowsMinus1)
+					for i = originalNoOfYellowsMinus1 + 1 to simulationInitialYellowsMinus1
+						AddCardToSimulationDeck("YellowMinus1")
+					next
+				endif
+				originalNoOfYellowsMinus2 = simulationNoOfYellowsMinus2
+				if (originalNoOfYellowsMinus2 > simulationInitialYellowsMinus2)
+					for i = originalNoOfYellowsMinus2 to simulationInitialYellowsMinus2 + 1 step -1
+						RemoveCardFromSimulationDeck(simulationDeck$.find("YellowMinus2"))
+					next
+				elseif (originalNoOfYellowsMinus2 < simulationInitialYellowsMinus2)
+					for i = originalNoOfYellowsMinus2 + 1 to simulationInitialYellowsMinus2
+						AddCardToSimulationDeck("YellowMinus2")
+					next
+				endif
+				inc simulationAverageNoOfTurns
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfTurns
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "YellowAdd1")
+				RemoveCardFromSimulationDeck(picked)
+				if (simulationNoOfReds < 399) then AddCardToSimulationDeck("Red")
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "YellowAdd2")
+				RemoveCardFromSimulationDeck(picked)
+				if (simulationNoOfReds < 399) then AddCardToSimulationDeck("Red")
+				if (simulationNoOfReds < 399) then AddCardToSimulationDeck("Red")
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "YellowAdd3")
+				RemoveCardFromSimulationDeck(picked)
+				if (simulationNoOfReds < 399) then AddCardToSimulationDeck("Red")
+				if (simulationNoOfReds < 399) then AddCardToSimulationDeck("Red")
+				if (simulationNoOfReds < 399) then AddCardToSimulationDeck("Red")
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "YellowMinus1")
+				RemoveCardFromSimulationDeck(picked)
+				RemoveCardFromSimulationDeck(simulationDeck$.find("Red"))
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfCardsDrawn
+			elseif (simulationDeck$[picked] = "YellowMinus2")
+				RemoveCardFromSimulationDeck(picked)
+				RemoveCardFromSimulationDeck(simulationDeck$.find("Red"))
+				RemoveCardFromSimulationDeck(simulationDeck$.find("Red"))
+				inc simulationAverageNoOfCardsDrawn
+				inc simulationNoOfCardsDrawn
+			endif
+		endwhile
+	endif
+endfunction
+
+function ShuffleSimulationDeck()
+	for i = 0 to simulationDeck$.length
+		a = random(0, simulationDeck$.length)
+		b = random(0, simulationDeck$.length)
+		simulationDeck$.swap(a, b)
+	next
+endfunction
+
+remstart
+* This is the bit of code that sits in the app main loop.
+
+* As mentioned above the RunSimulation is triggered when needed so normally sits in an if line, i.e. if the chart/simulation is in view.
+
+* Once simulationCount is higher than simulationsToTry it won't run anymore. Not until simulationCount is set back to 0.
+
+* All of this allows the simulation to run in the app in the background without causing too much or any lag.
+remend
+
+RunSimulation()
+
+if (simulationCount <= simulationsToTry)
+	if (simulationMinutesLocked < simulationBestCaseMinutesLocked) then simulationBestCaseMinutesLocked = simulationMinutesLocked
+	if (simulationNoOfTurns < simulationBestCaseNoOfTurns) then simulationBestCaseNoOfTurns = simulationNoOfTurns
+	if (simulationNoOfCardsDrawn < simulationBestCaseNoOfCardsDrawn) then simulationBestCaseNoOfCardsDrawn = simulationNoOfCardsDrawn
+	if (simulationMinutesLocked > simulationWorstCaseMinutesLocked) then simulationWorstCaseMinutesLocked = simulationMinutesLocked
+	if (simulationNoOfTurns > simulationWorstCaseNoOfTurns) then simulationWorstCaseNoOfTurns = simulationNoOfTurns
+	if (simulationNoOfCardsDrawn > simulationWorstCaseNoOfCardsDrawn) then simulationWorstCaseNoOfCardsDrawn = simulationNoOfCardsDrawn
+endif
+
+// CALCULATE BEST, AVERAGE, AND WORST CASE VALUES
+
+// NUMBER OF DAYS/HOURS
+if (regularity# = 24 or ((simulationAverageMinutesLocked / simulationsToTry) / 60) >= 168)
+	bestCaseLength = simulationBestCaseMinutesLocked / 60 / 24
+	averageCaseLength = (simulationAverageMinutesLocked / simulationsToTry) / 60 / 24
+	worstCaseLength = simulationWorstCaseMinutesLocked / 60 / 24
+else
+	bestCaseLength = simulationBestCaseMinutesLocked / 60
+	averageCaseLength = (simulationAverageMinutesLocked / simulationsToTry) / 60
+	worstCaseLength = simulationWorstCaseMinutesLocked / 60
+endif
+
+// NUMBER OF CHANCES
+bestCaseChances = simulationBestCaseNoOfTurns
+averageCaseChances = simulationAverageNoOfTurns / simulationsToTry
+worstCaseChances = simulationWorstCaseNoOfTurns
+
+// NUMBER OF CARDS DRAWN
+bestCaseCardsDrawn = simulationBestCaseNoOfCardsDrawn
+averageCaseCardsDrawn = simulationAverageNoOfCardsDrawn / simulationsToTry
+worstCaseCardsDrawn = simulationWorstCaseNoOfCardsDrawn
