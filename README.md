@@ -6,4 +6,5 @@ These are shared either because people have shown interest in knowing how certai
 ChastiKey can be downloaded from the following mobile app stores:
 
 Play Store (Android): https://play.google.com/store/apps/details?id=co.uk.kevincross.chastikey
+
 App Store (iOS): https://itunes.apple.com/gb/app/chastikey/id1375243924?mt=8
