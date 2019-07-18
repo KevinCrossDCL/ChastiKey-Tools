@@ -304,7 +304,7 @@ CREATE TABLE `UserIDs_V2` (
   `timestamp_last_active` int(11) NOT NULL,
   `token` text NOT NULL,
   `version_installed` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Server time is 8 hours behind GMT. I''m the first 3 user ids.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
