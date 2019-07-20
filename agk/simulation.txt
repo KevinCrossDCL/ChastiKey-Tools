@@ -378,6 +378,9 @@ function RunSimulation()
 				if (multipleGreensRequired = 0)
 					simulationDeck$.length = -1
 					exit
+				elseif (multipleGreensRequired = 1 and simulationNoOfGreens = 0)
+					simulationDeck$.length = -1
+					exit
 				endif
 				inc simulationAverageNoOfCardsDrawn
 				inc simulationNoOfCardsDrawn
