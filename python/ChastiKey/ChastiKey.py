@@ -18,17 +18,34 @@ class ChastiKey():
                 chastikey_df = pd.read_pickle(os.getcwd() + r"\ChastiKeyLocks.dat")
             else:
                 print("Creating new database.")
-                chastikey_df = pd.DataFrame(columns=["average_minutes_locked", "average_no_of_cards_drawn", 
-                                                     "average_no_of_turns", "best_case_minutes_locked", 
-                                                     "best_case_no_of_cards_drawn", "best_case_no_of_turns", 
-                                                     "lock_level", "maximum_double_ups", "maximum_freezes", 
-                                                     "maximum_greens", "maximum_reds", "maximum_resets",
-                                                     "maximum_yellows_add", "maximum_yellows_minus", 
-                                                     "maximum_yellows_random", "minimum_double_ups", "minimum_freezes", 
-                                                     "minimum_greens", "minimum_reds", "minimum_resets", 
-                                                     "minimum_yellows_add", "minimum_yellows_minus", "minimum_yellows_random",
-                                                     "multiple_greens_required", "regularity", "worst_case_minutes_locked", 
-                                                     "worst_case_no_of_cards_drawn", "worst_case_no_of_turns"])
+                chastikey_df = pd.DataFrame(columns=["average_minutes_locked",
+                                                     "average_no_of_cards_drawn",
+                                                     "average_no_of_turns",
+                                                     "best_case_minutes_locked",
+                                                     "best_case_no_of_cards_drawn",
+                                                     "best_case_no_of_turns",
+                                                     "lock_level",
+                                                     "maximum_double_ups",
+                                                     "maximum_freezes",
+                                                     "maximum_greens",
+                                                     "maximum_reds",
+                                                     "maximum_resets",
+                                                     "maximum_yellows_add",
+                                                     "maximum_yellows_minus",
+                                                     "maximum_yellows_random",
+                                                     "minimum_double_ups",
+                                                     "minimum_freezes",
+                                                     "minimum_greens",
+                                                     "minimum_reds",
+                                                     "minimum_resets",
+                                                     "minimum_yellows_add",
+                                                     "minimum_yellows_minus",
+                                                     "minimum_yellows_random",
+                                                     "multiple_greens_required",
+                                                     "regularity",
+                                                     "worst_case_minutes_locked",
+                                                     "worst_case_no_of_cards_drawn",
+                                                     "worst_case_no_of_turns"])
                 chastikey_df.to_pickle(os.getcwd() + r"\ChastiKeyLocks.dat")
 
     def __add_card_to_deck(self, card_name):
@@ -134,7 +151,8 @@ class ChastiKey():
             if random_yellow == 5:
                 self.__add_card_to_deck("YellowMinus2")
 
-        # Store the starting card counts in the initial counts. This is required for when the reset card is revealed.
+        # Store the starting card counts in the initial counts. 
+        # This is required for when the reset card is revealed.
         self.initial_double_ups = self.no_of_double_ups
         self.initial_freezes = self.no_of_freezes
         self.initial_greens = self.no_of_greens
@@ -146,7 +164,12 @@ class ChastiKey():
         self.initial_yellows_minus_1 = self.no_of_yellows_minus_1
         self.initial_yellows_minus_2 = self.no_of_yellows_minus_2
 
-    def __initialise_simulation(self, simulations_to_run=10, regularity=24, multiple_greens_required=0, minimum_double_ups=0, maximum_double_ups=0, minimum_freezes=0, maximum_freezes=0, minimum_greens=1, maximum_greens=1, minimum_reds=0, maximum_reds=0, minimum_resets=0, maximum_resets=0, minimum_yellows_add=0, maximum_yellows_add=0, minimum_yellows_minus=0, maximum_yellows_minus=0, minimum_yellows_random=0, maximum_yellows_random=0, print_output=False):
+    def __initialise_simulation(self, simulations_to_run=10, regularity=24, multiple_greens_required=0,
+                                minimum_double_ups=0, maximum_double_ups=0, minimum_freezes=0,
+                                maximum_freezes=0, minimum_greens=1, maximum_greens=1, minimum_reds=0,
+                                maximum_reds=0, minimum_resets=0, maximum_resets=0, minimum_yellows_add=0,
+                                maximum_yellows_add=0, minimum_yellows_minus=0, maximum_yellows_minus=0,
+                                minimum_yellows_random=0, maximum_yellows_random=0, print_output=False):
         """ (Private) Initialise simulation """
 
         # Probably far too many variables, but these are used throughout.
@@ -265,7 +288,8 @@ class ChastiKey():
                 self.hide_greens_until = self.minimum_reds
             else:
                 self.hide_greens_until = 1
-            # Loop until the deck has no cards. The loop can also be exited below once all of the required greens have been found.
+            # Loop until the deck has no cards.
+            # The loop can also be exited below once all of the required greens have been found.
             while len(self.deck) > 0:
                 # Pick a random card from the deck.
                 card_picked = random.choice(self.deck)
@@ -317,7 +341,8 @@ class ChastiKey():
                     self.average_no_of_cards_drawn = self.average_no_of_cards_drawn + 1
                     self.no_of_turns = self.no_of_turns + 1
                     self.no_of_cards_drawn = self.no_of_cards_drawn + 1
-                # If reset, then reset the deck. Set the number of cards back to the initial counts, except for double up and reset cards.
+                # If reset, then reset the deck.
+                # Set the number of cards back to the initial counts, except for double up and reset cards.
                 if card_picked == "Reset":
                     self.__remove_card_from_deck("Reset")
                     if self.no_of_freezes > self.initial_freezes:
@@ -406,7 +431,7 @@ class ChastiKey():
                     self.__remove_card_from_deck("Red")
                     self.average_no_of_cards_drawn = self.average_no_of_cards_drawn + 1
                     self.no_of_cards_drawn = self.no_of_cards_drawn + 1
-            # If the time, turns, and cards drawn count are better or worst then the last best or worst values, then store the new values.
+            # Save the best, average, and worst time, turns, and cards drawn count.
             if self.simulation_count <= self.simulations_to_run:
                 if self.minutes_locked < self.best_case_minutes_locked:
                     self.best_case_minutes_locked = self.minutes_locked
@@ -449,7 +474,25 @@ class ChastiKey():
                 lock_level = round(random.uniform(0.1, 1), 1)
             else:
                 lock_level = args_lock_level / 10.0
-            self.__initialise_simulation(simulations_to_run=10, regularity=1, multiple_greens_required=random.randint(0, 1), minimum_double_ups=random.randint(0, math.ceil(20 * lock_level)), maximum_double_ups=random.randint(0, math.ceil(20 * lock_level)), minimum_freezes=random.randint(0, math.ceil(20 * lock_level)), maximum_freezes=random.randint(0, math.ceil(20 * lock_level)), minimum_greens=random.randint(1, math.ceil(20 * lock_level)), maximum_greens=random.randint(1, math.ceil(20 * lock_level)), minimum_reds=random.randint(0, math.ceil(399 * lock_level)), maximum_reds=random.randint(0, math.ceil(399 * lock_level)), minimum_resets=random.randint(0, math.ceil(20 * lock_level)), maximum_resets=random.randint(0, math.ceil(20 * lock_level)), minimum_yellows_add=random.randint(0, math.ceil(199 * lock_level)), maximum_yellows_add=random.randint(0, math.ceil(199 * lock_level)), minimum_yellows_minus=random.randint(0, math.ceil(199 * lock_level)), maximum_yellows_minus=random.randint(0, math.ceil(199 * lock_level)), minimum_yellows_random=random.randint(0, math.ceil(199 * lock_level)), maximum_yellows_random=random.randint(0, math.ceil(199 * lock_level)), print_output=False)
+            self.__initialise_simulation(simulations_to_run=10, regularity=1, 
+                                         multiple_greens_required=random.randint(0, 1),
+                                         minimum_double_ups=random.randint(0, math.ceil(20 * lock_level)),
+                                         maximum_double_ups=random.randint(0, math.ceil(20 * lock_level)),
+                                         minimum_freezes=random.randint(0, math.ceil(20 * lock_level)),
+                                         maximum_freezes=random.randint(0, math.ceil(20 * lock_level)),
+                                         minimum_greens=random.randint(1, math.ceil(20 * lock_level)),
+                                         maximum_greens=random.randint(1, math.ceil(20 * lock_level)),
+                                         minimum_reds=random.randint(0, math.ceil(399 * lock_level)),
+                                         maximum_reds=random.randint(0, math.ceil(399 * lock_level)),
+                                         minimum_resets=random.randint(0, math.ceil(20 * lock_level)),
+                                         maximum_resets=random.randint(0, math.ceil(20 * lock_level)),
+                                         minimum_yellows_add=random.randint(0, math.ceil(199 * lock_level)),
+                                         maximum_yellows_add=random.randint(0, math.ceil(199 * lock_level)),
+                                         minimum_yellows_minus=random.randint(0, math.ceil(199 * lock_level)),
+                                         maximum_yellows_minus=random.randint(0, math.ceil(199 * lock_level)),
+                                         minimum_yellows_random=random.randint(0, math.ceil(199 * lock_level)),
+                                         maximum_yellows_random=random.randint(0, math.ceil(199 * lock_level)),
+                                         print_output=False)
             new_lock = {
                 "average_minutes_locked": self.average_minutes_locked / self.simulations_to_run, 
                 "average_no_of_cards_drawn": self.average_no_of_cards_drawn / self.simulations_to_run, 
