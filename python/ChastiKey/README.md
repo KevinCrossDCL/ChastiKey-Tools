@@ -7,3 +7,7 @@ At the moment you can't search for locks based on particular settings. That will
 Each lock that's generated is ran through a number of simulation runs to get the best, average, and worst times which are also saved in the data. All locks are created with a regularity/draw interval of an hour. I chose this as I thought it should be easily enough to multiply by the desired draw interval once searching is available.
 
 Feel free to take it away, play with it, update and make it better.
+
+The example.py script shows how to call the available functions/commands.
+
+There's also some dummy data saved as .dat (the pickle file) and .xlsx showing the couple of 1000 locks I've generated.
