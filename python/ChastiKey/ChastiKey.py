@@ -151,7 +151,7 @@ class ChastiKey():
             if random_yellow == 5:
                 self.__add_card_to_deck("YellowMinus2")
 
-        # Store the starting card counts in the initial counts. 
+        # Store the starting card counts in the initial counts.
         # This is required for when the reset card is revealed.
         self.initial_double_ups = self.no_of_double_ups
         self.initial_freezes = self.no_of_freezes
@@ -294,7 +294,7 @@ class ChastiKey():
                 # Pick a random card from the deck.
                 card_picked = random.choice(self.deck)
                 # If green and green found too early, continue and try again.
-                if card_picked == "Green" and self.no_of_turns < self.hide_greens_until and self.no_of_double_ups + self.no_of_freezes + self.no_of_reds + self.no_of_resets + self.no_of_yellows > 0:
+                if card_picked == "Green" and self.no_of_turns < self.hide_greens_until and self.no_of_double_ups + self.no_of_xfreezes + self.no_of_reds + self.no_of_resets + self.no_of_yellows > 0:
                     continue
                 # If double up, then double the number of reds and yellows in the deck.
                 if card_picked == "DoubleUp":
@@ -474,7 +474,7 @@ class ChastiKey():
                 lock_level = round(random.uniform(0.1, 1), 1)
             else:
                 lock_level = args_lock_level / 10.0
-            self.__initialise_simulation(simulations_to_run=10, regularity=1, 
+            self.__initialise_simulation(simulations_to_run=10, regularity=1,
                                          multiple_greens_required=random.randint(0, 1),
                                          minimum_double_ups=random.randint(0, math.ceil(20 * lock_level)),
                                          maximum_double_ups=random.randint(0, math.ceil(20 * lock_level)),
@@ -494,9 +494,9 @@ class ChastiKey():
                                          maximum_yellows_random=random.randint(0, math.ceil(199 * lock_level)),
                                          print_output=False)
             new_lock = {
-                "average_minutes_locked": self.average_minutes_locked / self.simulations_to_run, 
-                "average_no_of_cards_drawn": self.average_no_of_cards_drawn / self.simulations_to_run, 
-                "average_no_of_turns": self.average_no_of_turns / self.simulations_to_run, 
+                "average_minutes_locked": self.average_minutes_locked / self.simulations_to_run,
+                "average_no_of_cards_drawn": self.average_no_of_cards_drawn / self.simulations_to_run,
+                "average_no_of_turns": self.average_no_of_turns / self.simulations_to_run,
                 "best_case_minutes_locked": self.best_case_minutes_locked,
                 "best_case_no_of_turns": self.best_case_no_of_turns,
                 "best_case_no_of_cards_drawn": self.best_case_no_of_cards_drawn,
