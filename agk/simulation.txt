@@ -367,8 +367,9 @@ function RunSimulation()
 				inc simulationNoOfCardsDrawn
 			elseif (simulationDeck$[picked] = "Freeze")
 				RemoveCardFromSimulationDeck(picked)
-				simulationAverageMinutesLocked = simulationAverageMinutesLocked + random((60 * regularity#) * 2, (60 * regularity#) * 4)
-				simulationMinutesLocked = simulationMinutesLocked + random((60 * regularity#) * 2, (60 * regularity#) * 4)
+				minutesFrozen = random((60 * regularity#) * 2, (60 * regularity#) * 4)
+				simulationAverageMinutesLocked = minutesFrozen
+				simulationMinutesLocked = minutesFrozen
 				inc simulationAverageNoOfTurns
 				inc simulationAverageNoOfCardsDrawn
 				inc simulationNoOfTurns
