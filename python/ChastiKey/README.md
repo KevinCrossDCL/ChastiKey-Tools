@@ -1,6 +1,6 @@
 Something I've been writing on my bus journeys to and from work.
 
-It's a python module that will generate random locks (a bit like Remmie's bot) and will save the locks to a datafile that can be added too each time it's run.
+It's a python module that will generate random locks (a bit like Remmie's bot) and will save the locks to a datafile that can be added to each time it's run.
 
 At the moment you can't search for locks based on particular settings. That will come next. It does have an option to export the locks produced so far to Excel.
 
