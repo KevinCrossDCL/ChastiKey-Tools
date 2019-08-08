@@ -294,7 +294,7 @@ class ChastiKey():
                 # Pick a random card from the deck.
                 card_picked = random.choice(self.deck)
                 # If green and green found too early, continue and try again.
-                if card_picked == "Green" and self.no_of_turns < self.hide_greens_until and self.no_of_double_ups + self.no_of_xfreezes + self.no_of_reds + self.no_of_resets + self.no_of_yellows > 0:
+                if card_picked == "Green" and self.no_of_turns < self.hide_greens_until and self.no_of_double_ups + self.no_of_freezes + self.no_of_reds + self.no_of_resets + self.no_of_yellows > 0:
                     continue
                 # If double up, then double the number of reds and yellows in the deck.
                 if card_picked == "DoubleUp":
