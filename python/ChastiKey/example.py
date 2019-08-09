@@ -27,5 +27,15 @@ chastikey.SaveToExcel()
 # If you want to clear all of the previous saved locks data you can by calling ClearLocks()
 # chastikey.ClearLocks()
 
-# chastikey.SearchLocks(regularity=24, duration=31)
+# Search for locks that meet desired duration.
+# Accepts, regularity as:
+#   0.25 for 15 minutes,
+#   0.50 for 30 minutes,
+#   1 for 1 hour,
+#   3 for 3 hours,
+#   6 for 6 hours,
+#   12 for 12 hours,
+#   24 for 24 hours.
+# Also accepts duration (based on regularity). Variation which will search either side of the duration by x.
+# And no_of_locks will return that number of locks that match the search. 
 chastikey.SearchLocks(regularity=1, duration=8, variation=2, no_of_locks=1)
