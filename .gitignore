@@ -1,2 +1,4 @@
 .vscode/
-python/ChastiKey/__pycache__
+__pycache__/
+ChastiKeyLocks.dat
+ChastiKeyLocks.xlsx
