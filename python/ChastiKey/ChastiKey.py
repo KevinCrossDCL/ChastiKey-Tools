@@ -114,17 +114,17 @@ class ChastiKey():
         self.no_of_yellows_minus_1 = 0
         self.no_of_yellows_minus_2 = 0
 
-        for i in range(1, random.randint(self.minimum_double_ups, self.maximum_double_ups)):
+        for i in range(0, random.randint(self.minimum_double_ups, self.maximum_double_ups)):
             self.__add_card_to_deck("DoubleUp")
-        for i in range(1, random.randint(self.minimum_freezes, self.maximum_freezes)):
+        for i in range(0, random.randint(self.minimum_freezes, self.maximum_freezes)):
             self.__add_card_to_deck("Freeze")
-        for i in range(1, random.randint(self.minimum_greens, self.maximum_greens)):
+        for i in range(0, random.randint(self.minimum_greens, self.maximum_greens)):
             self.__add_card_to_deck("Green")
-        for i in range(1, random.randint(self.minimum_reds, self.maximum_reds)):
+        for i in range(0, random.randint(self.minimum_reds, self.maximum_reds)):
             self.__add_card_to_deck("Red")
-        for i in range(1, random.randint(self.minimum_resets, self.maximum_resets)):
+        for i in range(0, random.randint(self.minimum_resets, self.maximum_resets)):
             self.__add_card_to_deck("Resets")
-        for i in range(1, random.randint(self.minimum_yellows_add, self.maximum_yellows_add)):
+        for i in range(0, random.randint(self.minimum_yellows_add, self.maximum_yellows_add)):
             random_yellow = random.randint(1, 3)
             if random_yellow == 1:
                 self.__add_card_to_deck("YellowAdd1")
@@ -132,13 +132,13 @@ class ChastiKey():
                 self.__add_card_to_deck("YellowAdd2")
             if random_yellow == 3:
                 self.__add_card_to_deck("YellowAdd3")
-        for i in range(1, random.randint(self.minimum_yellows_minus, self.maximum_yellows_minus)):
+        for i in range(0, random.randint(self.minimum_yellows_minus, self.maximum_yellows_minus)):
             random_yellow = random.randint(1, 2)
             if random_yellow == 1:
                 self.__add_card_to_deck("YellowMinus1")
             if random_yellow == 2:
                 self.__add_card_to_deck("YellowMinus2")
-        for i in range(1, random.randint(self.minimum_yellows_random, self.maximum_yellows_random)):
+        for i in range(0, random.randint(self.minimum_yellows_random, self.maximum_yellows_random)):
             random_yellow = random.randint(1, 5)
             if random_yellow == 1:
                 self.__add_card_to_deck("YellowAdd1")
@@ -164,7 +164,7 @@ class ChastiKey():
         self.initial_yellows_minus_1 = self.no_of_yellows_minus_1
         self.initial_yellows_minus_2 = self.no_of_yellows_minus_2
 
-    def __initialise_simulation(self, simulations_to_run=10, regularity=24, multiple_greens_required=0,
+    def __initialise_simulation(self, simulations_to_run=10, regularity=1, multiple_greens_required=0,
                                 minimum_double_ups=0, maximum_double_ups=0, minimum_freezes=0,
                                 maximum_freezes=0, minimum_greens=1, maximum_greens=1, minimum_reds=0,
                                 maximum_reds=0, minimum_resets=0, maximum_resets=0, minimum_yellows_add=0,
@@ -173,15 +173,9 @@ class ChastiKey():
         """ (Private) Initialise simulation """
 
         # Probably far too many variables, but these are used throughout.
-        self.average_case_cards_drawn = 0
-        self.average_case_chances = 0
-        self.average_case_length = 0
         self.average_minutes_locked = 0
         self.average_no_of_turns = 0
         self.average_no_of_cards_drawn = 0
-        self.best_case_cards_drawn = 0
-        self.best_case_chances = 0
-        self.best_case_length = 0
         self.best_case_minutes_locked = 9999999999
         self.best_case_no_of_turns = 9999999999
         self.best_case_no_of_cards_drawn = 9999999999
@@ -215,6 +209,9 @@ class ChastiKey():
         self.minimum_yellows_random = min(minimum_yellows_random, maximum_yellows_random)
         self.minutes_locked = 0
         self.multiple_greens_required = multiple_greens_required
+        if self.multiple_greens_required == 0:
+            self.maximum_greens = 1
+            self.minimum_greens = 1
         self.no_of_cards_drawn = 0
         self.no_of_double_ups = 0
         self.no_of_freezes = 0
@@ -231,9 +228,6 @@ class ChastiKey():
         self.regularity = regularity
         self.simulation_count = 0
         self.simulations_to_run = simulations_to_run
-        self.worst_case_cards_drawn = 0
-        self.worst_case_chances = 0
-        self.worst_case_length = 0
         self.worst_case_minutes_locked = 0
         self.worst_case_no_of_turns = 0
         self.worst_case_no_of_cards_drawn = 0
@@ -432,19 +426,18 @@ class ChastiKey():
                     self.average_no_of_cards_drawn = self.average_no_of_cards_drawn + 1
                     self.no_of_cards_drawn = self.no_of_cards_drawn + 1
             # Save the best, average, and worst time, turns, and cards drawn count.
-            if self.simulation_count <= self.simulations_to_run:
-                if self.minutes_locked < self.best_case_minutes_locked:
-                    self.best_case_minutes_locked = self.minutes_locked
-                if self.no_of_turns < self.best_case_no_of_turns:
-                    self.best_case_no_of_turns = self.no_of_turns
-                if self.no_of_cards_drawn < self.best_case_no_of_cards_drawn:
-                    self.best_case_no_of_cards_drawn = self.no_of_cards_drawn
-                if self.minutes_locked > self.worst_case_minutes_locked:
-                    self.worst_case_minutes_locked = self.minutes_locked
-                if self.no_of_turns > self.worst_case_no_of_turns:
-                    self.worst_case_no_of_turns = self.no_of_turns
-                if self.no_of_cards_drawn > self.worst_case_no_of_cards_drawn:
-                    self.worst_case_no_of_cards_drawn = self.no_of_cards_drawn
+            if self.minutes_locked < self.best_case_minutes_locked:
+                self.best_case_minutes_locked = self.minutes_locked
+            if self.no_of_turns < self.best_case_no_of_turns:
+                self.best_case_no_of_turns = self.no_of_turns
+            if self.no_of_cards_drawn < self.best_case_no_of_cards_drawn:
+                self.best_case_no_of_cards_drawn = self.no_of_cards_drawn
+            if self.minutes_locked > self.worst_case_minutes_locked:
+                self.worst_case_minutes_locked = self.minutes_locked
+            if self.no_of_turns > self.worst_case_no_of_turns:
+                self.worst_case_no_of_turns = self.no_of_turns
+            if self.no_of_cards_drawn > self.worst_case_no_of_cards_drawn:
+                self.worst_case_no_of_cards_drawn = self.no_of_cards_drawn
 
     def ClearLocks(self):
         """ Clears all locks from the database """
@@ -535,3 +528,54 @@ class ChastiKey():
             excel_file = os.getcwd() + r"\ChastiKeyLocks.xlsx"
         chastikey_df.to_excel(excel_file, index=False)
         print("Excel file created.")
+
+    def SearchLocks(self, regularity=1, duration=8, variation=1, no_of_locks=5):
+        """ Search the database for suitable locks """
+
+        global chastikey_df
+        results_df = chastikey_df
+        results_df["average_minutes_locked"] = results_df["average_minutes_locked"] * regularity
+        results_df["best_case_minutes_locked"] = results_df["best_case_minutes_locked"] * regularity
+        results_df["worst_case_minutes_locked"] = results_df["worst_case_minutes_locked"] * regularity
+        min_duration = ((regularity * 60) * duration) - ((regularity * 60) * variation)
+        max_duration = ((regularity * 60) * duration) + ((regularity * 60) * variation)
+        results_df = results_df.query("average_minutes_locked >= {0} and average_minutes_locked <= {1}".format(min_duration, max_duration))
+        results_df = results_df.sort_values(by=["average_minutes_locked", "worst_case_minutes_locked"], ascending=[True, True])
+        total_found = results_df.shape[0]
+        no_of_random_rows = min(no_of_locks, results_df.shape[0])
+        if no_of_random_rows > 0:
+            results_df = results_df.sample(n=no_of_random_rows)
+        print("Showing " + str(results_df.shape[0]) + " of " + str(total_found) + " random lock(s).")
+        # Display the locks found.
+        for index, row in results_df.iterrows():
+            print("---------------------------------------------------------------------")
+            if regularity == 0.25: print("Regularity: Every 15 minutes")
+            if regularity == 0.50: print("Regularity: Every 30 minutes")
+            if regularity == 1: print("Regularity: Every hour")
+            if regularity == 3: print("Regularity: Every 3 hours")
+            if regularity == 6: print("Regularity: Every 6 hours")
+            if regularity == 12: print("Regularity: Every 12 hours")
+            if regularity == 24: print("Regularity: Every 24 hours")
+            print("Red cards: {0:.0f}-{1:.0f}".format(row["minimum_reds"], row["maximum_reds"]))
+            print("Random yellow cards: {0:.0f}-{1:.0f}".format(row["minimum_yellows_random"], row["maximum_yellows_random"]))
+            print("Yellow cards that remove reds: {0:.0f}-{1:.0f}".format(row["minimum_yellows_minus"], row["maximum_yellows_minus"]))
+            print("Yellow cards that add reds: {0:.0f}-{1:.0f}".format(row["minimum_yellows_add"], row["maximum_yellows_add"]))
+            print("Freeze cards: {0:.0f}-{1:.0f}".format(row["minimum_freezes"], row["maximum_freezes"]))
+            print("Double up cards: {0:.0f}-{1:.0f}".format(row["minimum_double_ups"], row["maximum_double_ups"]))
+            print("Reset cards: {0:.0f}-{1:.0f}".format(row["minimum_resets"], row["maximum_resets"]))
+            if row["multiple_greens_required"] == 0: print("Multiple greens required: No")
+            if row["multiple_greens_required"] == 1:
+                print("Multiple greens required: Yes")
+                print("Green cards: {0:.0f}-{1:.0f}".format(row["minimum_greens"], row["maximum_greens"]))
+            if regularity == 24 or row["best_case_minutes_locked"] / 60 >= 168:
+                print("Best case time locked: {0:.0f} days".format(row["best_case_minutes_locked"] / 60 / 24))
+            else:
+                print("Best case time locked: {0:.0f} hours".format(row["best_case_minutes_locked"] / 60))
+            if regularity == 24 or row["average_minutes_locked"] / 60 >= 168:
+                print("Average time locked: {0:.0f} days".format(row["average_minutes_locked"] / 60 / 24))
+            else:
+                print("Average time locked: {0:.0f} hours".format(row["average_minutes_locked"] / 60))
+            if regularity == 24 or row["worst_case_minutes_locked"] / 60 >= 168:
+                print("Worst case time locked: {0:.0f} days".format(row["worst_case_minutes_locked"] / 60 / 24))
+            else:
+                print("Worst case time locked: {0:.0f} hours".format(row["worst_case_minutes_locked"] / 60))
