@@ -114,17 +114,17 @@ class ChastiKey():
         self.no_of_yellows_minus_1 = 0
         self.no_of_yellows_minus_2 = 0
 
-        for i in range(0, random.randint(self.minimum_double_ups, self.maximum_double_ups)):
+        for _i in range(0, random.randint(self.minimum_double_ups, self.maximum_double_ups)):
             self.__add_card_to_deck("DoubleUp")
-        for i in range(0, random.randint(self.minimum_freezes, self.maximum_freezes)):
+        for _i in range(0, random.randint(self.minimum_freezes, self.maximum_freezes)):
             self.__add_card_to_deck("Freeze")
-        for i in range(0, random.randint(self.minimum_greens, self.maximum_greens)):
+        for _i in range(0, random.randint(self.minimum_greens, self.maximum_greens)):
             self.__add_card_to_deck("Green")
-        for i in range(0, random.randint(self.minimum_reds, self.maximum_reds)):
+        for _i in range(0, random.randint(self.minimum_reds, self.maximum_reds)):
             self.__add_card_to_deck("Red")
-        for i in range(0, random.randint(self.minimum_resets, self.maximum_resets)):
+        for _i in range(0, random.randint(self.minimum_resets, self.maximum_resets)):
             self.__add_card_to_deck("Resets")
-        for i in range(0, random.randint(self.minimum_yellows_add, self.maximum_yellows_add)):
+        for _i in range(0, random.randint(self.minimum_yellows_add, self.maximum_yellows_add)):
             random_yellow = random.randint(1, 3)
             if random_yellow == 1:
                 self.__add_card_to_deck("YellowAdd1")
@@ -132,13 +132,13 @@ class ChastiKey():
                 self.__add_card_to_deck("YellowAdd2")
             if random_yellow == 3:
                 self.__add_card_to_deck("YellowAdd3")
-        for i in range(0, random.randint(self.minimum_yellows_minus, self.maximum_yellows_minus)):
+        for _i in range(0, random.randint(self.minimum_yellows_minus, self.maximum_yellows_minus)):
             random_yellow = random.randint(1, 2)
             if random_yellow == 1:
                 self.__add_card_to_deck("YellowMinus1")
             if random_yellow == 2:
                 self.__add_card_to_deck("YellowMinus2")
-        for i in range(0, random.randint(self.minimum_yellows_random, self.maximum_yellows_random)):
+        for _i in range(0, random.randint(self.minimum_yellows_random, self.maximum_yellows_random)):
             random_yellow = random.randint(1, 5)
             if random_yellow == 1:
                 self.__add_card_to_deck("YellowAdd1")
@@ -293,17 +293,17 @@ class ChastiKey():
                 # If double up, then double the number of reds and yellows in the deck.
                 if card_picked == "DoubleUp":
                     self.__remove_card_from_deck("DoubleUp")
-                    for i in range(1, self.no_of_reds):
+                    for _i in range(1, self.no_of_reds):
                         self.__add_card_to_deck("Red")
-                    for i in range(1, self.no_of_yellows_add_1):
+                    for _i in range(1, self.no_of_yellows_add_1):
                         self.__add_card_to_deck("YellowAdd1")
-                    for i in range(1, self.no_of_yellows_add_2):
+                    for _i in range(1, self.no_of_yellows_add_2):
                         self.__add_card_to_deck("YellowAdd2")
-                    for i in range(1, self.no_of_yellows_add_3):
+                    for _i in range(1, self.no_of_yellows_add_3):
                         self.__add_card_to_deck("YellowAdd3")
-                    for i in range(1, self.no_of_yellows_minus_1):
+                    for _i in range(1, self.no_of_yellows_minus_1):
                         self.__add_card_to_deck("YellowMinus1")
-                    for i in range(1, self.no_of_yellows_minus_2):
+                    for _i in range(1, self.no_of_yellows_minus_2):
                         self.__add_card_to_deck("YellowMinus2")
                     self.average_no_of_cards_drawn = self.average_no_of_cards_drawn + 1
                     self.no_of_cards_drawn = self.no_of_cards_drawn + 1
@@ -340,52 +340,52 @@ class ChastiKey():
                 if card_picked == "Reset":
                     self.__remove_card_from_deck("Reset")
                     if self.no_of_freezes > self.initial_freezes:
-                        for i in range(self.no_of_freezes, self.initial_freezes + 1, -1):
+                        for _i in range(self.no_of_freezes, self.initial_freezes + 1, -1):
                             self.__remove_card_from_deck("Freeze")
                     elif self.no_of_freezes < self.initial_freezes:
-                        for i in range(self.no_of_freezes + 1, self.initial_freezes):
+                        for _i in range(self.no_of_freezes + 1, self.initial_freezes):
                             self.__add_card_to_deck("Freeze")
                     if self.no_of_greens > self.initial_greens:
-                        for i in range(self.no_of_greens, self.initial_greens + 1, -1):
+                        for _i in range(self.no_of_greens, self.initial_greens + 1, -1):
                             self.__remove_card_from_deck("Green")
                     elif self.no_of_greens < self.initial_greens:
-                        for i in range(self.no_of_greens + 1, self.initial_greens):
+                        for _i in range(self.no_of_greens + 1, self.initial_greens):
                             self.__add_card_to_deck("Green")
                     if self.no_of_reds > self.initial_reds:
-                        for i in range(self.no_of_reds, self.initial_reds + 1, -1):
+                        for _i in range(self.no_of_reds, self.initial_reds + 1, -1):
                             self.__remove_card_from_deck("Red")
                     elif self.no_of_reds < self.initial_reds:
-                        for i in range(self.no_of_reds + 1, self.initial_reds):
+                        for _i in range(self.no_of_reds + 1, self.initial_reds):
                             self.__add_card_to_deck("Red")
                     if self.no_of_yellows_add_1 > self.initial_yellows_add_1:
-                        for i in range(self.no_of_yellows_add_1, self.initial_yellows_add_1 + 1, -1):
+                        for _i in range(self.no_of_yellows_add_1, self.initial_yellows_add_1 + 1, -1):
                             self.__remove_card_from_deck("YellowAdd1")
                     elif self.no_of_yellows_add_1 < self.initial_yellows_add_1:
-                        for i in range(self.no_of_yellows_add_1 + 1, self.initial_yellows_add_1):
+                        for _i in range(self.no_of_yellows_add_1 + 1, self.initial_yellows_add_1):
                             self.__add_card_to_deck("YellowAdd1")
                     if self.no_of_yellows_add_2 > self.initial_yellows_add_2:
-                        for i in range(self.no_of_yellows_add_2, self.initial_yellows_add_2 + 1, -1):
+                        for _i in range(self.no_of_yellows_add_2, self.initial_yellows_add_2 + 1, -1):
                             self.__remove_card_from_deck("YellowAdd2")
                     elif self.no_of_yellows_add_2 < self.initial_yellows_add_2:
-                        for i in range(self.no_of_yellows_add_2 + 1, self.initial_yellows_add_2):
+                        for _i in range(self.no_of_yellows_add_2 + 1, self.initial_yellows_add_2):
                             self.__add_card_to_deck("YellowAdd2")
                     if self.no_of_yellows_add_3 > self.initial_yellows_add_3:
-                        for i in range(self.no_of_yellows_add_3, self.initial_yellows_add_3 + 1, -1):
+                        for _i in range(self.no_of_yellows_add_3, self.initial_yellows_add_3 + 1, -1):
                             self.__remove_card_from_deck("YellowAdd3")
                     elif self.no_of_yellows_add_3 < self.initial_yellows_add_3:
-                        for i in range(self.no_of_yellows_add_3 + 1, self.initial_yellows_add_3):
+                        for _i in range(self.no_of_yellows_add_3 + 1, self.initial_yellows_add_3):
                             self.__add_card_to_deck("YellowAdd3")
                     if self.no_of_yellows_minus_1 > self.initial_yellows_minus_1:
-                        for i in range(self.no_of_yellows_minus_1, self.initial_yellows_minus_1 + 1, -1):
+                        for _i in range(self.no_of_yellows_minus_1, self.initial_yellows_minus_1 + 1, -1):
                             self.__remove_card_from_deck("YellowMinus1")
                     elif self.no_of_yellows_minus_1 < self.initial_yellows_minus_1:
-                        for i in range(self.no_of_yellows_minus_1 + 1, self.initial_yellows_minus_1):
+                        for _i in range(self.no_of_yellows_minus_1 + 1, self.initial_yellows_minus_1):
                             self.__add_card_to_deck("YellowMinus1")
                     if self.no_of_yellows_minus_2 > self.initial_yellows_minus_2:
-                        for i in range(self.no_of_yellows_minus_2, self.initial_yellows_minus_2 + 1, -1):
+                        for _i in range(self.no_of_yellows_minus_2, self.initial_yellows_minus_2 + 1, -1):
                             self.__remove_card_from_deck("YellowMinus2")
                     elif self.no_of_yellows_minus_2 < self.initial_yellows_minus_2:
-                        for i in range(self.no_of_yellows_minus_2 + 1, self.initial_yellows_minus_2):
+                        for _i in range(self.no_of_yellows_minus_2 + 1, self.initial_yellows_minus_2):
                             self.__add_card_to_deck("YellowMinus2")
                     self.average_no_of_turns = self.average_no_of_turns + 1
                     self.average_no_of_cards_drawn = self.average_no_of_cards_drawn + 1
@@ -462,7 +462,7 @@ class ChastiKey():
         args_lock_level = lock_level
         global chastikey_df
         print("Generating " + str(number_of_locks) + " lock(s).")
-        for i in range(0, number_of_locks):
+        for _i in range(0, number_of_locks):
             if args_lock_level is None:
                 lock_level = round(random.uniform(0.1, 1), 1)
             else:
@@ -529,7 +529,7 @@ class ChastiKey():
         chastikey_df.to_excel(excel_file, index=False)
         print("Excel file created.")
 
-    def SearchLocks(self, regularity=1, level=-1, duration=-1, variation=1, no_of_locks=5, sort="random"):
+    def SearchLocks(self, regularity=1, lock_level=-1, duration=-1, variation=1, no_of_locks=5, sort="random"):
         """ Search the database for suitable locks """
 
         global chastikey_df
@@ -564,7 +564,7 @@ class ChastiKey():
                 results_df = results_df.iloc[0:no_of_rows_to_display]
         print("Showing " + str(results_df.shape[0]) + " of " + str(total_found) + " lock(s).")
         # Display the locks found.
-        for index, row in results_df.iterrows():
+        for _index, row in results_df.iterrows():
             print("---------------------------------------------------------------------")
             if regularity == 0.25: print("Regularity: Every 15 minutes")
             if regularity == 0.50: print("Regularity: Every 30 minutes")
