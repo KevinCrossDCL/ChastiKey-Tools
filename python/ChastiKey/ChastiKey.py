@@ -543,9 +543,8 @@ class ChastiKey():
             min_duration = ((regularity * 60) * duration) - ((regularity * 60) * variation)
             max_duration = ((regularity * 60) * duration) + ((regularity * 60) * variation)
             query_part_1 = "average_minutes_locked >= {0} and average_minutes_locked <= {1}".format(min_duration, max_duration)
-        if level > -1:
-            lock_level = level / 10.0
-            print(lock_level)
+        if lock_level > -1:
+            lock_level = lock_level / 10.0
             if query_part_1 != "":
                 query_part_2 = " and lock_level == {0}".format(lock_level)
             else:
