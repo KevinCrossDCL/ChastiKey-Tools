@@ -38,10 +38,10 @@ chastikey.SaveToExcel()
 #   24 for 24 hours.
 # duration (based on regularity). Variation which will search either side of the duration by x.
 # no_of_locks will return that number of locks that match the search.
-# level. 10 levels between 1 and 10. 1. the shortest, and 10. the longest.
+# lock_level. 10 levels between 1 and 10. 1. the shortest, and 10. the longest.
 # sort as:
 #   random (default)
 #   asc (sorts average time, and worst time in ascending order)
 #   desc (sorts average time, and worst time in descending order)
 chastikey.SearchLocks(regularity=1, duration=7, variation=3, no_of_locks=1)
-# chastikey.SearchLocks(regularity=1, level=5, no_of_locks=2, sort="asc")
+# chastikey.SearchLocks(regularity=1, lock_level=5, no_of_locks=2, sort="asc")
