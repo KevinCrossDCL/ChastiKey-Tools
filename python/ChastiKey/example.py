@@ -14,7 +14,7 @@ chastikey = ck.ChastiKey()
 #
 # All locks are created with a regularity/draw interval of 1 hour.
 # The thinking here is that the times saved for each lock can be multiplied by the required draw interval once searching is implemented.
-chastikey.GenerateLocks(number_of_locks=1000)
+chastikey.GenerateLocks(number_of_locks=10)
 
 # At the moment DisplayStats just shows how many locks are saved in the database. I say database but it's a pickle file that pandas uses.
 chastikey.DisplayStats()
@@ -36,6 +36,12 @@ chastikey.SaveToExcel()
 #   6 for 6 hours,
 #   12 for 12 hours,
 #   24 for 24 hours.
-# Also accepts duration (based on regularity). Variation which will search either side of the duration by x.
-# And no_of_locks will return that number of locks that match the search. 
-chastikey.SearchLocks(regularity=1, duration=8, variation=2, no_of_locks=1)
+# duration (based on regularity). Variation which will search either side of the duration by x.
+# no_of_locks will return that number of locks that match the search.
+# level. 10 levels between 1 and 10. 1. the shortest, and 10. the longest.
+# sort as:
+#   random (default)
+#   asc (sorts average time, and worst time in ascending order)
+#   desc (sorts average time, and worst time in descending order)
+chastikey.SearchLocks(regularity=1, duration=7, variation=3, no_of_locks=1)
+# chastikey.SearchLocks(regularity=1, level=5, no_of_locks=2, sort="asc")

@@ -454,7 +454,7 @@ class ChastiKey():
         """ Display database stats """
 
         global chastikey_df
-        print(str(chastikey_df.shape[0]) + " lock(s) saved.")
+        print(str(chastikey_df.shape[0]) + " lock(s) in the database.")
 
     def GenerateLocks(self, number_of_locks=1, lock_level=None):
         """ Generate random locks """
@@ -518,7 +518,7 @@ class ChastiKey():
             }
             chastikey_df = chastikey_df.append(new_lock, ignore_index=True)
             chastikey_df.to_pickle(os.getcwd() + r"\ChastiKeyLocks.dat")
-        print(str(number_of_locks) + " lock(s) generated and saved to dataframe.")
+        print(str(number_of_locks) + " lock(s) generated and saved to database.")
 
     def SaveToExcel(self, excel_file=None):
         """ Save locks database to an excel file """
@@ -529,23 +529,40 @@ class ChastiKey():
         chastikey_df.to_excel(excel_file, index=False)
         print("Excel file created.")
 
-    def SearchLocks(self, regularity=1, duration=8, variation=1, no_of_locks=5):
+    def SearchLocks(self, regularity=1, level=-1, duration=-1, variation=1, no_of_locks=5, sort="random"):
         """ Search the database for suitable locks """
 
         global chastikey_df
         results_df = chastikey_df
-        results_df["average_minutes_locked"] = results_df["average_minutes_locked"] * regularity
-        results_df["best_case_minutes_locked"] = results_df["best_case_minutes_locked"] * regularity
-        results_df["worst_case_minutes_locked"] = results_df["worst_case_minutes_locked"] * regularity
-        min_duration = ((regularity * 60) * duration) - ((regularity * 60) * variation)
-        max_duration = ((regularity * 60) * duration) + ((regularity * 60) * variation)
-        results_df = results_df.query("average_minutes_locked >= {0} and average_minutes_locked <= {1}".format(min_duration, max_duration))
-        results_df = results_df.sort_values(by=["average_minutes_locked", "worst_case_minutes_locked"], ascending=[True, True])
+        query_part_1 = ""
+        query_part_2 = ""
+        if duration > -1:
+            results_df["average_minutes_locked"] = results_df["average_minutes_locked"] * regularity
+            results_df["best_case_minutes_locked"] = results_df["best_case_minutes_locked"] * regularity
+            results_df["worst_case_minutes_locked"] = results_df["worst_case_minutes_locked"] * regularity
+            min_duration = ((regularity * 60) * duration) - ((regularity * 60) * variation)
+            max_duration = ((regularity * 60) * duration) + ((regularity * 60) * variation)
+            query_part_1 = "average_minutes_locked >= {0} and average_minutes_locked <= {1}".format(min_duration, max_duration)
+        if level > -1:
+            lock_level = level / 10.0
+            print(lock_level)
+            if query_part_1 != "":
+                query_part_2 = " and lock_level == {0}".format(lock_level)
+            else:
+                query_part_2 = "lock_level == {0}".format(lock_level)
+        results_df = results_df.query(query_part_1 + query_part_2)
         total_found = results_df.shape[0]
-        no_of_random_rows = min(no_of_locks, results_df.shape[0])
-        if no_of_random_rows > 0:
-            results_df = results_df.sample(n=no_of_random_rows)
-        print("Showing " + str(results_df.shape[0]) + " of " + str(total_found) + " random lock(s).")
+        no_of_rows_to_display = min(no_of_locks, results_df.shape[0])
+        if no_of_rows_to_display > 0:
+            if sort.lower() == "random":
+                results_df = results_df.sample(n=no_of_rows_to_display)
+            elif sort.lower() == "asc":
+                results_df = results_df.sort_values(by=["average_minutes_locked", "worst_case_minutes_locked"], ascending=[True, True])
+                results_df = results_df.iloc[0:no_of_rows_to_display]
+            elif sort.lower() == "desc":
+                results_df = results_df.sort_values(by=["average_minutes_locked", "worst_case_minutes_locked"], ascending=[False, False])
+                results_df = results_df.iloc[0:no_of_rows_to_display]
+        print("Showing " + str(results_df.shape[0]) + " of " + str(total_found) + " lock(s).")
         # Display the locks found.
         for index, row in results_df.iterrows():
             print("---------------------------------------------------------------------")
