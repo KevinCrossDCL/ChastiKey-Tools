@@ -14,8 +14,7 @@ chastikey = ck.ChastiKey()
 #
 # All locks are created with a regularity/draw interval of 1 hour.
 # The thinking here is that the times saved for each lock can be multiplied by the required draw interval once searching is implemented.
-chastikey.ClearLocks()
-chastikey.GenerateLocks(lock_level=1, number_of_locks=50)
+chastikey.GenerateLocks(number_of_locks=10)
 
 # At the moment DisplayStats just shows how many locks are saved in the database. I say database but it's a pickle file that pandas uses.
 chastikey.DisplayStats()
