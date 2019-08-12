@@ -529,7 +529,7 @@ class ChastiKey():
         chastikey_df.to_excel(excel_file, index=False)
         print("Excel file created.")
 
-    def SearchLocks(self, regularity=1, lock_level=-1, duration=-1, variation=1, no_of_locks=5, sort="random"):
+    def SearchLocks(self, regularity=1, lock_level=-1, duration=-1, variation=1, number_of_locks=5, sort="random"):
         """ Search the database for suitable locks """
 
         global chastikey_df
@@ -551,7 +551,7 @@ class ChastiKey():
                 query_part_2 = "lock_level == {0}".format(lock_level)
         results_df = results_df.query(query_part_1 + query_part_2)
         total_found = results_df.shape[0]
-        no_of_rows_to_display = min(no_of_locks, results_df.shape[0])
+        no_of_rows_to_display = min(number_of_locks, results_df.shape[0])
         if no_of_rows_to_display > 0:
             if sort.lower() == "random":
                 results_df = results_df.sample(n=no_of_rows_to_display)
