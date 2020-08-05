@@ -595,9 +595,7 @@ remstart
 * All of this allows the simulation to run in the app in the background without causing too much or any lag.
 remend
 
-if (simulationCount > 0)
-    RunSimulation()
-endif
+RunSimulation()
 
 if (simulationCount <= simulationsToTry)
 	if (simulationMinutesLocked < simulationBestCaseMinutesLocked) then simulationBestCaseMinutesLocked = simulationMinutesLocked
